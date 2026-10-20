@@ -45,12 +45,12 @@ Designed as an engineering portfolio project, CareFlow demonstrates practical tr
 
 ### Architecture Diagram
 ```mermaid
-graph TD
+flowchart TD
     Client["Clients / Swagger UI / Mobile Apps"] -->|HTTPS / REST + JWT| Security["Spring Security Filter Chain"]
     Security --> JwtFilter["JwtAuthenticationFilter"]
     JwtFilter --> Controllers["REST Controllers (/api/v1/*)"]
     
-    subgraph CareFlow Modular Monolith
+    subgraph CoreApp ["CareFlow Modular Monolith"]
         Controllers --> UserModule["User & Auth Module"]
         Controllers --> PatientModule["Patient Module"]
         Controllers --> DoctorModule["Doctor & Department Module"]
@@ -63,7 +63,14 @@ graph TD
         ApptModule --> AuditModule["Audit Log Module (REQUIRES_NEW)"]
     end
     
-    CareFlow Modular Monolith --> SpringData["Spring Data JPA / Hibernate 6.5"]
+    UserModule --> SpringData["Spring Data JPA / Hibernate 6.5"]
+    PatientModule --> SpringData
+    DoctorModule --> SpringData
+    SchedModule --> SpringData
+    ApptModule --> SpringData
+    QueueModule --> SpringData
+    BillModule --> SpringData
+
     SpringData --> Flyway["Flyway Versioned Migrations"]
     Flyway --> Database[("MySQL 8.4 LTS / In-Memory H2")]
 ```

@@ -7,12 +7,12 @@ CareFlow is designed as a **Modular Monolith** backend application built with **
 ## 1. High-Level Architectural Diagram
 
 ```mermaid
-graph TD
+flowchart TD
     Client["Clients (Web / Mobile / Receptionist UI / Swagger UI)"] -->|HTTPS / REST / JWT Bearer| Gateway["Spring Security Filter Chain"]
     Gateway --> JwtFilter["JwtAuthenticationFilter"]
     JwtFilter --> Controllers["REST Controllers (/api/v1/*)"]
 
-    subgraph CareFlow Application Layer
+    subgraph ApplicationLayer ["CareFlow Application Layer"]
         Controllers --> UserModule["User & Auth Module"]
         Controllers --> PatientModule["Patient Module"]
         Controllers --> DoctorModule["Doctor & Department Module"]
@@ -28,7 +28,7 @@ graph TD
         BillModule -.->|Calculates Consultation Fee| DoctorModule
     end
 
-    subgraph Persistence Layer
+    subgraph PersistenceLayer ["Persistence Layer"]
         UserModule --> JpaRepo["Spring Data JPA Repositories"]
         PatientModule --> JpaRepo
         DoctorModule --> JpaRepo
@@ -39,7 +39,7 @@ graph TD
         JpaRepo --> HibernateORM["Hibernate ORM 6.5"]
     end
 
-    subgraph Data Store
+    subgraph DataStore ["Data Store"]
         HibernateORM --> Flyway["Flyway Migration Engine (V1..V7)"]
         Flyway --> Database[("MySQL 8.4 LTS / In-Memory H2")]
     end
